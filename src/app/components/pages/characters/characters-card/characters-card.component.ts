@@ -10,7 +10,7 @@ import { LocalStorageService } from '@app/shared/services/localStorage.service';
 })
 export class CharactersCardComponent {
 
-  @Input() character: Character;
+  @Input() character!: Character;
 
   constructor(private localStorageSvc: LocalStorageService) { }
 
