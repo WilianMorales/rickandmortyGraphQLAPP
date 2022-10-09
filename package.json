@@ -21,6 +21,7 @@
     "@apollo/client": "^3.0.0",
     "apollo-angular": "^3.0.1",
     "graphql": "^16",
+    "ngx-infinite-scroll": "^14.0.0",
     "ngx-toastr": "^15.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
