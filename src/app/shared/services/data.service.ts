@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject } from 'rxjs';
-import { pluck, take, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { find, mergeMap, pluck, take, tap, withLatestFrom } from 'rxjs/operators';
 
 import { Character, DataResponse, Episode } from './../interfaces/data.interface';
 
 import { LocalStorageService } from './localStorage.service';
 
-const QUERY = gql `
+const QUERY = gql`
 {
   episodes {
     results {
@@ -42,6 +42,13 @@ export class DataService {
     this.getDataAPI();
   }
 
+  getDeatails(id: number): any{
+    return this.characters$.pipe(
+      mergeMap((characters: Character[]) => characters),
+      find((character: Character) => character?.id === id)
+    );
+  }
+
   getCharactersByPage(pageNum: number): void {
     const QUERY_BY_PAGE = gql`
         {
@@ -57,16 +64,16 @@ export class DataService {
           }
         }`;
 
-        this.apollo.watchQuery<any>({
-          query: QUERY_BY_PAGE
-        }).valueChanges.pipe(
-          take(1),
-          pluck('data', 'characters'),
-          withLatestFrom(this.characters$),
-          tap(([apiResponse, characters]) => {
-            this.parseCharactersData([...characters, ...apiResponse.results]);
-          })
-        ).subscribe();
+    this.apollo.watchQuery<any>({
+      query: QUERY_BY_PAGE
+    }).valueChanges.pipe(
+      take(1),
+      pluck('data', 'characters'),
+      withLatestFrom(this.characters$),
+      tap(([apiResponse, characters]) => {
+        this.parseCharactersData([...characters, ...apiResponse.results]);
+      })
+    ).subscribe();
   }
 
   private getDataAPI(): void {
@@ -74,7 +81,7 @@ export class DataService {
       query: QUERY
     }).valueChanges.pipe(
       take(1),
-      tap( ({data}) => {
+      tap(({ data }) => {
         const { characters, episodes } = data;
         this.charactersSubject.next(characters.results);
         this.episodesSubject.next(episodes.results);
@@ -86,8 +93,8 @@ export class DataService {
   private parseCharactersData(characters: Character[]): void {
     const currentsFav = this.localStorageSvc.getFavoritesCharacters();
     const newData = characters.map(character => {
-      const found = !! currentsFav.find( (fav: Character) => fav.id === character.id );
-      return {...character, isFavorite: found}
+      const found = !!currentsFav.find((fav: Character) => fav.id === character.id);
+      return { ...character, isFavorite: found }
     });
 
     this.charactersSubject.next(newData);
