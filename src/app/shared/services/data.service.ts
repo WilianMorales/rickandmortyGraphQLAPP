@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { find, mergeMap, pluck, take, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+import { find, mergeMap, pluck, take, tap, withLatestFrom, catchError } from 'rxjs/operators';
 
-import { Character, DataResponse, Episode } from './../interfaces/data.interface';
+import { Character, DataResponse, Episode } from '@shared/interfaces/data.interface';
 
 import { LocalStorageService } from './localStorage.service';
 
@@ -42,7 +42,7 @@ export class DataService {
     this.getDataAPI();
   }
 
-  getDeatails(id: number): any{
+  getDeatails(id: number): any {
     return this.characters$.pipe(
       mergeMap((characters: Character[]) => characters),
       find((character: Character) => character?.id === id)
@@ -76,14 +76,55 @@ export class DataService {
     ).subscribe();
   }
 
-  private getDataAPI(): void {
+  public filterData(valueToSearch: string): void {
+    const QUERY_BY_NAME = gql`
+      query ($name: String) {
+        characters(filter: { name: $name }) {
+          info {
+            count
+          }
+          results {
+            id
+            name
+            status
+            species
+            gender
+            image
+          }
+        }
+      }
+    `;
+
+    this.apollo.watchQuery<any>(
+      {
+        query: QUERY_BY_NAME,
+        variables: {
+          name: valueToSearch,
+        },
+      }
+    ).valueChanges.pipe(
+        take(1),
+        pluck('data', 'characters'),
+        tap((apiResponse) => 
+          this.parseCharactersData([...apiResponse.results])
+        ),
+        catchError((error) => {
+          console.log(error.message);
+          this.charactersSubject.next(null!);
+          return of(error);
+        })
+      )
+      .subscribe();
+  }
+
+  getDataAPI(): void {
     this.apollo.watchQuery<DataResponse>({
       query: QUERY
     }).valueChanges.pipe(
       take(1),
       tap(({ data }) => {
         const { characters, episodes } = data;
-        this.charactersSubject.next(characters.results);
+        
         this.episodesSubject.next(episodes.results);
         this.parseCharactersData(characters.results);
       })

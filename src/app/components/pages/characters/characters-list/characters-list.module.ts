@@ -5,6 +5,7 @@ import { CharactersListRoutingModule } from './characters-list-routing.module';
 import { CharactersListComponent } from './characters-list.component';
 import { CharactersCardModule } from '../characters-card/characters-card.module';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { SearchModule } from '@shared/components/search/search.module';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     CharactersListRoutingModule,
     CharactersCardModule,
     InfiniteScrollModule,
+    SearchModule
   ]
 })
 export class CharactersListModule { }
