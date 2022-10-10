@@ -14,15 +14,15 @@ export class CharactersCardComponent {
 
   constructor(private localStorageSvc: LocalStorageService) { }
 
-  getIcon(): string {
-    return this.character.isFavorite ? 'heart-solid.svg' : 'heart.svg';
-  }
-
   toggleFavorite(): void {
     const isFavorite = this.character.isFavorite;
     this.getIcon();
     this.character.isFavorite = !isFavorite;
     this.localStorageSvc.addOrRemoveFavorite(this.character);
+  }
+
+  getIcon(): string {
+    return this.character.isFavorite ? 'heart-solid.svg' : 'heart.svg';
   }
 
 }

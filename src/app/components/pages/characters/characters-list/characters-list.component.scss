@@ -1,8 +1,20 @@
-section.character__list {
+.character__list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     height: auto;
+    
+    .not-results {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    
+        &__title {
+          font-size: 2rem;
+          color: #fff;
+        }
+    }
 }
 
 .button {
