@@ -1,12 +1,29 @@
-section.about__page {
-    margin-top: 2rem;
-    color: #f5f5f5;
-    .about_container {
-        display: flex;
-        margin-top: 2rem;
+.about__page {
+    padding: 1rem;
+    color     : #f5f5f5;
+
+    .about__container {
+        display       : flex;
+        margin-top    : 2rem;
+        flex-direction: column;
+
+        .about__img img {
+            width : 300px;
+            height: 300px;
+        }
+
+        @media (min-width: 768px) {
+        
+            .about__img img {
+                width : 460px;
+                height: 306px;
+            }
+    
+        }
     }
 
     .about__copy {
         text-align: end;
+        padding-bottom: 1rem;
     }
 }

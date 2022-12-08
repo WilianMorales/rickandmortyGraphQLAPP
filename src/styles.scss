@@ -37,7 +37,7 @@ header {
   width: 25%;
 }
 
-nav {
+.menu {
 
   .menu__toggle {
     display: block;
@@ -106,7 +106,7 @@ nav {
   }
 
 
-  ul.navbar {
+  .navbar {
     list-style: none;
     text-align: center;
     position: absolute;
@@ -286,13 +286,17 @@ nav {
 }
 
 .title {
-  color: #fff;
+  color: #f89406;
   font-weight: 700;
   font-size: 3rem;
 }
 
 .text-white {
   color: #fff;
+}
+
+.text-orange {
+  color: #f89406;
 }
 
 .truncate-string {
@@ -313,10 +317,16 @@ nav {
   justify-content: center;
 }
 
+@media (max-width: 580px) {
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
 
 /*** EPISODES ***/
 
-ul.episodes__list {
+.episodes__list {
   counter-reset: gradient-counter;
   list-style: none;
   margin: 1.75rem 0;
@@ -404,7 +414,7 @@ ul.episodes__list {
 
   .card__details {
 
-    padding: 0 10px 10px;
+    padding: 10px 10px;
     position: relative;
 
     h3 {

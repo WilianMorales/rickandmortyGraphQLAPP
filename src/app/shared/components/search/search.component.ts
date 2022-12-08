@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
     <div class="search__name">
         <label for="searchName"> Search by name...</label>
         <input type="text" class="search__input" placeholder="Search by name..." [formControl]="search" />
-        <button (click)="onClear()">Clear</button>
+        <button class="search__button" (click)="onClear()">Clear</button>
     </div>
   </section>`,
   styleUrls: ['./search.component.scss']
@@ -38,14 +38,14 @@ export class SearchComponent implements OnDestroy {
 
   private onSearch(): void {
     this.search.valueChanges
-    .pipe(
-      map((search: string) => search?.toLowerCase().trim()),
-      debounceTime(300),
-      distinctUntilChanged(),
-      filter((search: string) => search !== '' && search?.length > 2),
-      tap((search) => this.dataSvc.filterData(search)),
-      takeUntil(this.destroy$)
-    ).subscribe();
+      .pipe(
+        map((search: string) => search?.toLowerCase().trim()),
+        debounceTime(300),
+        distinctUntilChanged(),
+        filter((search: string) => search !== '' && search?.length > 2),
+        tap((search) => this.dataSvc.filterData(search)),
+        takeUntil(this.destroy$)
+      ).subscribe();
   }
 
 }
